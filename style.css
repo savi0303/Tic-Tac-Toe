@@ -1,30 +1,64 @@
-.cell {
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .cell {
     transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: white;
   }
   .cell:hover {
-    background-color: #f0f0f0;
+    background-color: #f3f4f6;
+    transform: scale(1.05);
   }
   .cell.x::after {
     content: 'X';
-    font-size: 2.5rem;
+    font-size: 3rem;
+    font-weight: bold;
     color: #3b82f6;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    animation: fadeIn 0.3s;
+    animation: popIn 0.3s ease;
   }
   .cell.o::after {
     content: 'O';
-    font-size: 2.5rem;
+    font-size: 3rem;
+    font-weight: bold;
     color: #ef4444;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    animation: fadeIn 0.3s;
+    animation: popIn 0.3s ease;
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.5); }
+  
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.3); }
     to { opacity: 1; transform: scale(1); }
+  }
+  
+  .modal {
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .dark .cell {
+    background-color: #374151;
+    border-color: #4b5563;
+  }
+  .dark .cell:hover {
+    background-color: #4b5563;
+  }
+  .dark .cell.x::after {
+    color: #60a5fa;
+  }
+  .dark .cell.o::after {
+    color: #f87171;
   }
