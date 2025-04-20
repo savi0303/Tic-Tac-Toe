@@ -156,29 +156,41 @@ const TicTacToe = () => {
   }, [isPlayerTurn, winner, isSinglePlayer]);
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-100 to-gray-100'}`}>
-      <div className="container mx-auto p-4 flex flex-col items-center">
-        <div className="flex justify-between w-full max-w-md mb-4">
-          <h1 className="text-3xl font-bold">Tic-Tac-Toe</h1>
+    <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-100 to-purple-100'}`}>
+      <div className="container mx-auto py-8 px-4 flex flex-col items-center">
+        {/* Header with logo and theme toggle */}
+        <div className="flex justify-between items-center w-full max-w-4xl mb-8 px-4">
+          <h1 className="text-4xl font-bold flex items-center">
+            <span className="mr-2">Tic-Tac-Toe</span>
+            <span className="text-blue-500 dark:text-blue-400 text-lg font-normal">Pro</span>
+          </h1>
           <button
-            className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-200 flex items-center"
             onClick={toggleTheme}
           >
             {isDarkMode ? 'Light Mode' : 'Dark Mode'}
           </button>
         </div>
-        <div className="flex flex-col md:flex-row w-full max-w-4xl gap-8">
-          <div className="flex-1">
-            <div className="mb-4 flex gap-2">
+
+        {/* Main content */}
+        <div className="flex flex-col lg:flex-row w-full max-w-4xl gap-8 px-4">
+          {/* Game section */}
+          <div className="flex-1 flex flex-col items-center">
+            {/* Game control buttons */}
+            <div className="mb-6 flex gap-3 w-full max-w-md justify-center">
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-200 flex-1"
                 onClick={toggleMode}
               >
-                {isSinglePlayer ? 'Switch to Multiplayer' : 'Switch to Single Player'}
+                {isSinglePlayer ? 'Multiplayer Mode' : 'Single Player Mode'}
               </button>
               {isSinglePlayer && (
                 <button
-                  className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition"
+                  className={`px-4 py-2 rounded-lg shadow-md transition duration-200 flex-1 ${
+                    history.length === 0 || !isPlayerTurn || winner 
+                      ? 'bg-gray-400 cursor-not-allowed text-gray-200' 
+                      : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                  }`}
                   onClick={undoMove}
                   disabled={history.length === 0 || !isPlayerTurn || winner}
                 >
@@ -186,61 +198,139 @@ const TicTacToe = () => {
                 </button>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-3 w-80 h-80 bg-gray-300 dark:bg-gray-800 p-3 rounded-lg shadow-lg mx-auto">
+
+            {/* Game board */}
+            <div className="grid grid-cols-3 gap-3 w-80 h-80 bg-gray-300 dark:bg-gray-700 p-4 rounded-xl shadow-lg mb-6">
               {board.map((cell, index) => (
                 <div
                   key={index}
-                  className={`cell w-full h-full flex items-center justify-center text-4xl cursor-pointer ${cell ? cell.toLowerCase() : ''}`}
+                  className={`cell w-full h-full flex items-center justify-center text-5xl cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow transition-all duration-200 hover:shadow-md ${
+                    !cell && !winner ? 'hover:bg-gray-100 dark:hover:bg-gray-700' : ''
+                  } ${cell ? cell.toLowerCase() : ''}`}
                   onClick={() => handleClick(index)}
                 />
               ))}
             </div>
-            <div className="mt-4 flex justify-center">
+
+            {/* New game button */}
+            <div className="flex justify-center">
               <button
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                className="px-8 py-3 bg-green-600 text-white text-lg rounded-lg shadow-md hover:bg-green-700 transition duration-200"
                 onClick={resetGame}
               >
                 New Game
               </button>
             </div>
           </div>
-          <div className="flex-1">
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-gray-800 dark:text-white">
-              <h2 className="text-xl font-semibold mb-2">Scoreboard</h2>
-              <p>X Wins: {scores.x}</p>
-              <p>O Wins: {scores.o}</p>
-              <p>Draws: {scores.draws}</p>
+
+          {/* Info panels */}
+          <div className="flex-1 flex flex-col">
+            {/* Current player indicator */}
+            {!winner && (
+              <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md text-gray-800 dark:text-white mb-5">
+                <h2 className="text-xl font-semibold mb-3">Current Turn</h2>
+                <div className="flex items-center justify-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                  <div className={`text-4xl font-bold ${isPlayerTurn ? 'text-blue-500' : 'text-red-500'}`}>
+                    {isPlayerTurn ? 'X' : 'O'}
+                  </div>
+                  <div className="ml-4 text-lg">
+                    {isSinglePlayer 
+                      ? (isPlayerTurn ? "Your Turn" : "Computer's Turn") 
+                      : `Player ${isPlayerTurn ? '1' : '2'}'s Turn`}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Scoreboard */}
+            <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md text-gray-800 dark:text-white mb-5">
+              <h2 className="text-xl font-semibold mb-3">Scoreboard</h2>
+              <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="flex flex-col items-center p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                  <span className="text-lg mb-1">Player X</span>
+                  <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">{scores.x}</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                  <span className="text-lg mb-1">Draws</span>
+                  <span className="text-3xl font-bold text-gray-600 dark:text-gray-400">{scores.draws}</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-red-100 dark:bg-red-900 rounded-lg">
+                  <span className="text-lg mb-1">Player O</span>
+                  <span className="text-3xl font-bold text-red-600 dark:text-red-400">{scores.o}</span>
+                </div>
+              </div>
               <button
-                className="mt-2 px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                className="w-full mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200"
                 onClick={resetScores}
               >
                 Reset Scores
               </button>
             </div>
-            <div className="mt-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-gray-800 dark:text-white">
-              <h2 className="text-xl font-semibold mb-2">Game History</h2>
-              <ul className="max-h-40 overflow-y-auto">
-                {history.map((move, idx) => (
-                  <li key={idx} className="text-sm">
-                    {move.player} placed at position {move.index + 1}
-                  </li>
-                ))}
-              </ul>
+
+            {/* Game History */}
+            <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md text-gray-800 dark:text-white">
+              <h2 className="text-xl font-semibold mb-3">Game History</h2>
+              {history.length > 0 ? (
+                <div className="max-h-48 overflow-y-auto scrollbar-thin pr-2">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200 dark:border-gray-700">
+                        <th className="pb-2 text-left">Move</th>
+                        <th className="pb-2 text-left">Player</th>
+                        <th className="pb-2 text-left">Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {history.map((move, idx) => (
+                        <tr key={idx} className="border-b border-gray-100 dark:border-gray-700">
+                          <td className="py-2">{idx + 1}</td>
+                          <td className={`py-2 font-medium ${move.player === 'X' ? 'text-blue-500' : 'text-red-500'}`}>
+                            {move.player}
+                          </td>
+                          <td className="py-2">Position {move.index + 1}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                  No moves yet
+                </div>
+              )}
             </div>
           </div>
         </div>
+        
+        {/* Winner modal */}
         {winner && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="modal bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full text-center text-gray-800 dark:text-white">
-              <h2 className="text-2xl font-bold mb-4">
-                {winner === 'draw' ? "It's a Draw!" : `Player ${winner} Wins!`}
-              </h2>
-              <button
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                onClick={resetGame}
-              >
-                Play Again
-              </button>
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+            <div className="modal bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-sm w-full text-center text-gray-800 dark:text-white">
+              {winner === 'draw' ? (
+                <>
+                  <h2 className="text-3xl font-bold mb-4">It's a Draw!</h2>
+                  <p className="mb-6 text-gray-600 dark:text-gray-300">Good game! The board is full with no winner.</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="text-3xl font-bold mb-4">
+                    {winner === 'X' ? 'Player X Wins!' : 'Player O Wins!'}
+                  </h2>
+                  <p className="mb-6 text-gray-600 dark:text-gray-300">
+                    {isSinglePlayer && winner === 'X' ? 'Congratulations on your victory!' : 
+                     isSinglePlayer && winner === 'O' ? 'The computer has won this round!' : 
+                     'Well played!'}
+                  </p>
+                </>
+              )}
+              <div className="flex gap-3 justify-center">
+                <button
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                  onClick={resetGame}
+                >
+                  Play Again
+                </button>
+              </div>
             </div>
           </div>
         )}
