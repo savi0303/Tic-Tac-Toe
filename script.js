@@ -67,13 +67,9 @@ const TicTacToe = () => {
     }
   };
 
-  const playSound = (type) => {
-    const sounds = {
-      move: new Audio('https://www.soundjay.com/buttons/beep-01a.mp3'),
-      win: new Audio('https://www.soundjay.com/misc/sounds/cheer-1.mp3'),
-      draw: new Audio('https://www.soundjay.com/misc/sounds/applause-2.mp3')
-    };
-    sounds[type]?.play().catch(() => {});
+  const playWinSound = () => {
+    const sound = new Audio('https://www.soundjay.com/misc/sounds/cheer-1.mp3');
+    sound.play().catch(() => {});
   };
 
   const handleClick = (index) => {
@@ -84,13 +80,12 @@ const TicTacToe = () => {
     setBoard(newBoard);
     setHistory([...history, { player: isSinglePlayer ? 'X' : isPlayerTurn ? 'X' : 'O', index }]);
     setIsPlayerTurn(!isPlayerTurn);
-    playSound('move');
 
     const result = checkWinner(newBoard);
     if (result) {
       setWinner(result);
       updateScores(result);
-      playSound(result === 'draw' ? 'draw' : 'win');
+      playWinSound();
     }
   };
 
@@ -102,13 +97,12 @@ const TicTacToe = () => {
       setBoard(newBoard);
       setHistory([...history, { player: 'O', index: move }]);
       setIsPlayerTurn(true);
-      playSound('move');
 
       const result = checkWinner(newBoard);
       if (result) {
         setWinner(result);
         updateScores(result);
-        playSound(result === 'draw' ? 'draw' : 'win');
+        playWinSound();
       }
     }
   };

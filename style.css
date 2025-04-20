@@ -3,62 +3,89 @@ body {
     font-family: 'Arial', sans-serif;
   }
   
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* 3 columns of exactly 100px */
+    grid-template-rows: repeat(3, 100px); /* 3 rows of exactly 100px */
+    gap: 4px; /* Gap between cells */
+    width: 308px; /* 3 * 100px + 2 * 4px = 308px */
+    height: 308px; /* Same for height */
+    background-color: #d1d5db; /* Gray background */
+    padding: 4px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Prevent any scaling or resizing */
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Ensure it’s not affected by parent containers */
+    flex-shrink: 0;
+  }
+  
   .cell {
-    transition: all 0.3s ease;
+    width: 100px; /* Fixed width */
+    height: 100px; /* Fixed height */
+    transition: background-color 0.3s ease;
     border: 2px solid #e5e7eb;
     border-radius: 8px;
     background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    line-height: 1;
+    box-sizing: border-box; /* Ensure borders don’t affect size */
+    cursor: pointer;
   }
+  
   .cell:hover {
     background-color: #f3f4f6;
-    transform: scale(1.05);
   }
+  
   .cell.x::after {
     content: 'X';
-    font-size: 3rem;
     font-weight: bold;
     color: #3b82f6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
     animation: popIn 0.3s ease;
   }
+  
   .cell.o::after {
     content: 'O';
-    font-size: 3rem;
     font-weight: bold;
     color: #ef4444;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
     animation: popIn 0.3s ease;
   }
   
   @keyframes popIn {
-    from { opacity: 0; transform: scale(0.3); }
-    to { opacity: 1; transform: scale(1); }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   
   .modal {
     animation: slideIn 0.3s ease;
   }
+  
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .dark .grid-container {
+    background-color: #374151;
   }
   
   .dark .cell {
     background-color: #374151;
     border-color: #4b5563;
   }
+  
   .dark .cell:hover {
     background-color: #4b5563;
   }
+  
   .dark .cell.x::after {
     color: #60a5fa;
   }
+  
   .dark .cell.o::after {
     color: #f87171;
   }
