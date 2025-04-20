@@ -155,6 +155,23 @@ const TicTacToe = () => {
     }
   }, [isPlayerTurn, winner, isSinglePlayer]);
 
+  // Cell component to ensure consistent rendering regardless of state
+  const Cell = ({ value, index }) => {
+    return (
+      <div
+        className={`flex items-center justify-center w-full h-full bg-white dark:bg-gray-800 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700`}
+        onClick={() => handleClick(index)}
+        style={{ aspectRatio: '1/1' }}
+      >
+        {value && (
+          <span className={`text-5xl font-bold ${value === 'X' ? 'text-blue-500' : 'text-red-500'}`}>
+            {value}
+          </span>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-100 to-purple-100'}`}>
       <div className="container mx-auto py-8 px-4 flex flex-col items-center">
@@ -199,17 +216,13 @@ const TicTacToe = () => {
               )}
             </div>
 
-            {/* Game board */}
-            <div className="grid grid-cols-3 gap-3 w-80 h-80 bg-gray-300 dark:bg-gray-700 p-4 rounded-xl shadow-lg mb-6">
-              {board.map((cell, index) => (
-                <div
-                  key={index}
-                  className={`cell w-full h-full flex items-center justify-center text-5xl cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow transition-all duration-200 hover:shadow-md ${
-                    !cell && !winner ? 'hover:bg-gray-100 dark:hover:bg-gray-700' : ''
-                  } ${cell ? cell.toLowerCase() : ''}`}
-                  onClick={() => handleClick(index)}
-                />
-              ))}
+            {/* Game board - fixed size cells with grid */}
+            <div className="bg-gray-300 dark:bg-gray-700 p-4 rounded-xl shadow-lg mb-6" style={{ width: '320px', height: '320px' }}>
+              <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full h-full">
+                {board.map((cell, index) => (
+                  <Cell key={index} value={cell} index={index} />
+                ))}
+              </div>
             </div>
 
             {/* New game button */}

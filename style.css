@@ -1,30 +1,43 @@
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
+    transition: background-color 0.5s ease;
   }
   
+  /* Board and Cell Animations */
   .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 100px); /* 3 columns of exactly 100px */
-    grid-template-rows: repeat(3, 100px); /* 3 rows of exactly 100px */
-    gap: 4px; /* Gap between cells */
-    width: 308px; /* 3 * 100px + 2 * 4px = 308px */
-    height: 308px; /* Same for height */
-    background-color: #d1d5db; /* Gray background */
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 4px;
+    width: 308px;
+    height: 308px;
+    background-color: #d1d5db;
     padding: 4px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Prevent any scaling or resizing */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     overflow: hidden;
-    /* Ensure it’s not affected by parent containers */
     flex-shrink: 0;
+    transform-origin: center;
+    animation: boardEntrance 0.6s ease-out;
+  }
+  
+  @keyframes boardEntrance {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
   }
   
   .cell {
-    width: 100px; /* Fixed width */
-    height: 100px; /* Fixed height */
-    transition: background-color 0.3s ease;
+    width: 100px;
+    height: 100px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid #e5e7eb;
     border-radius: 8px;
     background-color: white;
@@ -33,53 +46,209 @@ body {
     align-items: center;
     font-size: 2.5rem;
     line-height: 1;
-    box-sizing: border-box; /* Ensure borders don’t affect size */
+    box-sizing: border-box;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
   
   .cell:hover {
     background-color: #f3f4f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .cell:active {
+    transform: translateY(0);
+    transition: all 0.1s;
+  }
+  
+  /* X and O animations */
+  .cell.x::after, .cell.o::after {
+    position: relative;
+    display: block;
+    font-weight: bold;
   }
   
   .cell.x::after {
     content: 'X';
-    font-weight: bold;
     color: #3b82f6;
-    animation: popIn 0.3s ease;
+    animation: xMark 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   
   .cell.o::after {
     content: 'O';
-    font-weight: bold;
     color: #ef4444;
-    animation: popIn 0.3s ease;
+    animation: oMark 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   
-  @keyframes popIn {
+  @keyframes xMark {
+    0% {
+      opacity: 0;
+      transform: scale(0.5) rotate(-45deg);
+    }
+    70% {
+      transform: scale(1.2) rotate(0deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  @keyframes oMark {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    70% {
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Winner modal animations */
+  .modal-backdrop {
+    animation: fadeIn 0.3s ease forwards;
+  }
+  
+  .modal {
+    animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
   }
   
-  .modal {
-    animation: slideIn 0.3s ease;
+  @keyframes modalSlideIn {
+    from { 
+      opacity: 0; 
+      transform: translateY(-30px) scale(0.95);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1);
+    }
   }
   
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+  /* Button animations */
+  button {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
   
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+  
+  button:hover::after {
+    animation: ripple 0.6s ease-out;
+  }
+  
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(20, 20);
+      opacity: 0;
+    }
+  }
+  
+  /* Scoreboard animations */
+  .scoreboard {
+    animation: fadeSlideIn 0.5s ease-out;
+  }
+  
+  .score-item {
+    transition: all 0.3s ease;
+  }
+  
+  .score-item.updated {
+    animation: scoreUpdate 0.6s ease;
+  }
+  
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scoreUpdate {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Game history animations */
+  .history-item {
+    animation: slideInFromRight 0.3s ease-out;
+  }
+  
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Dark mode transitions */
   .dark .grid-container {
     background-color: #374151;
+    transition: background-color 0.5s ease;
   }
   
   .dark .cell {
-    background-color: #374151;
+    background-color: #1f2937;
     border-color: #4b5563;
+    transition: all 0.3s ease;
   }
   
   .dark .cell:hover {
-    background-color: #4b5563;
+    background-color: #374151;
   }
   
   .dark .cell.x::after {
@@ -88,4 +257,67 @@ body {
   
   .dark .cell.o::after {
     color: #f87171;
+  }
+  
+  /* Theme toggle animation */
+  .theme-toggle {
+    transition: transform 0.5s ease, background-color 0.3s ease;
+  }
+  
+  .theme-toggle:hover {
+    transform: rotate(10deg);
+  }
+  
+  /* Win animation for winning combination */
+  .cell.win-cell {
+    animation: winPulse 1.5s ease infinite;
+  }
+  
+  @keyframes winPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }
+  
+  /* Additional animations for game elements */
+  .game-title {
+    animation: titleEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  @keyframes titleEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Current player indicator animation */
+  .current-player {
+    transition: all 0.3s ease;
+  }
+  
+  .current-player.active {
+    animation: playerIndicator 0.5s ease;
+  }
+  
+  @keyframes playerIndicator {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
