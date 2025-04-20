@@ -205,7 +205,7 @@ const TicTacToe = () => {
             </div>
           </div>
           <div className="flex-1">
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-gray-800 dark:text-white">
               <h2 className="text-xl font-semibold mb-2">Scoreboard</h2>
               <p>X Wins: {scores.x}</p>
               <p>O Wins: {scores.o}</p>
@@ -217,7 +217,7 @@ const TicTacToe = () => {
                 Reset Scores
               </button>
             </div>
-            <div className="mt-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <div className="mt-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md text-gray-800 dark:text-white">
               <h2 className="text-xl font-semibold mb-2">Game History</h2>
               <ul className="max-h-40 overflow-y-auto">
                 {history.map((move, idx) => (
@@ -231,7 +231,7 @@ const TicTacToe = () => {
         </div>
         {winner && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="modal bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <div className="modal bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full text-center text-gray-800 dark:text-white">
               <h2 className="text-2xl font-bold mb-4">
                 {winner === 'draw' ? "It's a Draw!" : `Player ${winner} Wins!`}
               </h2>
